@@ -1,0 +1,22 @@
+package member.model.service;
+
+import java.sql.Connection;
+import java.util.List;
+
+import member.model.dao.MemberDao;
+import member.model.vo.Member;
+import static common.JDBCTemplate.*;
+
+public class MemberService {
+
+	private MemberDao memberDao = new MemberDao();
+
+	public List<Member> selectOne(Member member) {
+		Connection conn = getConnection();
+		List<Member> list = memberDao.selectOne(conn, member);
+		
+		close(conn);
+		
+		return list;
+	}
+}
