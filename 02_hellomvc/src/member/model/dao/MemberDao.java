@@ -25,7 +25,7 @@ public class MemberDao {
 
 	public MemberDao() {
 		String fileName = MemberDao.class.getResource("/sql/member/member-query.properties").getPath();
-		
+
 		try {
 			prop.load(new FileReader(fileName));
 		} catch (FileNotFoundException e) {
@@ -40,7 +40,7 @@ public class MemberDao {
 		PreparedStatement pstmt = null;
 		ResultSet rset = null;
 		String sql = prop.getProperty("selectOne");
-		
+
 		Member m = null;
 
 		try {
@@ -81,15 +81,15 @@ public class MemberDao {
 	}
 
 	public int insertMember(Connection conn, Member member) {
-		
+
 		PreparedStatement pstmt = null;
 		String sql = prop.getProperty("insertMember");
 		int result = 0;
-		
+
 		try {
-			
+
 			pstmt = conn.prepareStatement(sql);
-			
+
 			pstmt.setString(1, member.getMemberId());
 			pstmt.setString(2, member.getPassword());
 			pstmt.setString(3, member.getMemberName());
@@ -99,15 +99,97 @@ public class MemberDao {
 			pstmt.setString(7, member.getPhone());
 			pstmt.setString(8, member.getAddress());
 			pstmt.setString(9, member.getHobby());
-			
+
 			result = pstmt.executeUpdate();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			close(pstmt);
 		}
+
+		return result;
+	}
+
+	public int updateMember(Connection conn, Member member) {
+
+		PreparedStatement pstmt = null;
+		String sql = prop.getProperty("updateMember");
+		int result = 0;
+
+		try {
+
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, member.getPassword());
+			pstmt.setString(2, member.getMemberName());
+			pstmt.setString(3, member.getGender());
+			pstmt.setDate(4, member.getBirthday());
+			pstmt.setString(5, member.getEmail());
+			pstmt.setString(6, member.getPhone());
+			pstmt.setString(7, member.getAddress());
+			pstmt.setString(8, member.getHobby());
+
+			pstmt.setString(9, member.getMemberId());
+
+			result = pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(pstmt);
+		}
+
+		return result;
+	}
+
+	public int deleteMember(Connection conn, String memberId) {
+
+		PreparedStatement pstmt = null;
+		String sql = prop.getProperty("deleteMember");
 		
+		int result = 0;
+
+		try {
+
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, memberId);
+			
+			result = pstmt.executeUpdate();
+
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+			
+		} finally {
+			
+			close(pstmt);
+		}
+
+		return result;
+	}
+
+	public int updatePassword(Connection conn, Member member) {
+		
+		PreparedStatement pstmt = null;
+		String sql = prop.getProperty("updatePassword");
+		int result = 0;
+
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, member.getPassword());
+			pstmt.setString(2, member.getMemberId());
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		} finally {
+			close(pstmt);
+		}
+
 		return result;
 	}
 }

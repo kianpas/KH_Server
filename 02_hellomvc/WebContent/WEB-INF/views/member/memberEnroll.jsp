@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/views/common/header.jsp"%>
 <%
 String signUpMsg = (String) request.getAttribute("signUpMsg");
-String loc2 = (String)request.getAttribute("loc2");
+String loc2 = (String) request.getAttribute("loc2");
 %>
 <script>
 
@@ -13,34 +13,12 @@ String loc2 = (String)request.getAttribute("loc2");
  <%if (signUpMsg != null) {%>
 alert("<%=signUpMsg%>");
 <%}%>
-/*
- * 오류시 인덱스 페이지로 돌아감
- */
- <%if(loc2 != null) { %>
- 	location.href = "<%= loc2%>";
-<% } %>
 
-	/**
-	 * 회원가입 폼 유효성 검사
-	 */
-	$(function() {
-		$("[name=memberEnrollFrm]").submit(function() {
-			var $memberId_ = $(memberId_);
-			var $password_ = $(password_);
-			if (/^.{4,}/.test($memberId_.val()) == false) {
-				alert("유효한 아이디를 입력하세요.");
-				$memberId_.select();
-				return false;
-			}
-
-			if (/^.{4,}/.test($password_.val()) == false) {
-				alert("유효한 비밀번호를 입력하세요.");
-				$password_.select();
-				return false;
-			}
-		});
-	});
+	
 </script>
+<form action="" name="checkIdDuplicateFrm">
+	<input type="hidden" name="memberId" />
+</form>
 <section id=enroll-container>
 	<h2>회원 가입 정보 입력</h2>
 	<form name="memberEnrollFrm"
@@ -50,7 +28,10 @@ alert("<%=signUpMsg%>");
 			<tr>
 				<th>아이디<sup>*</sup></th>
 				<td><input type="text" placeholder="4글자이상" name="memberId"
-					id="memberId_" required></td>
+					id="memberId_" required> <input type="button" value="중복검사"
+					onclick="checkIdDuplicate();" /> <input type="hidden" id="idValid"
+					value="0" /> <%-- #idValid 1이면 사용가능한 아이디이고 중복검사함, 0이면 중복검사전 --%></td>
+
 			</tr>
 			<tr>
 				<th>패스워드<sup>*</sup></th>
@@ -59,8 +40,8 @@ alert("<%=signUpMsg%>");
 			</tr>
 			<tr>
 				<th>패스워드확인<sup>*</sup></th>
-				<td><input type="password" id="password2" required><br>
-				</td>
+				<td><input type="password" name="password2" id="password2"
+					required><br></td>
 			</tr>
 			<tr>
 				<th>이름<sup>*</sup></th>
@@ -110,4 +91,89 @@ alert("<%=signUpMsg%>");
 			value="취소">
 	</form>
 </section>
+<script>
+/*
+ * 아이디 중복 검사함수
+ * 팝업창으로 [name=checkIdDuplicateFrm]을 제출한다.
+ * 현재 페이지에 머물면서 서버통신하기 위함
+ */
+function checkIdDuplicate(){
+	var $memberId = $("#memberId_");
+	if(/^[a-zA-Z0-9_]{4,}$/.test($memberId.val()) == false){
+		alert("유효한 아이디를 입력해주세요.");
+		$memberId.select();
+		return;
+	}
+	//1. 팝업생성
+	//popup Window객체의 name 속성 : checkIdDuplicatePopup
+	var title = "checkIdDuplicatePopup";
+	open("", title, "width=300px, height=200px, left=200px, top=200px");
+	
+	//2. 폼제출
+	$frm = $(document.checkIdDuplicateFrm);
+	$frm.find("[name=memberId]").val($memberId.val()); //사용자 입력 id세팅
+	$frm.attr("action", "<%=request.getContextPath()%>/member/checkIdDuplicate")
+				.attr("method", "POST").attr("target", title)//popup과 form을 연결
+				.submit(); 
+
+	}
+	/**
+	 * 회원가입 유효성 검사
+	 */
+	$(document.memberEnrollFrm).submit(function() {
+		//memberId
+		var $memberId = $("#memberId_");
+		//아이디는 영문자/숫자  4글자이상만 허용 
+		if (/^[a-zA-Z0-9]{4,}$/.test($memberId.val()) == false) {
+			alert("아이디는 최소 4자리이상이어야 합니다.");
+			$memberId.select();
+			return false;
+		}
+		//중복검사
+		var $idValid = $("#idValid");
+		if ($idValid.val() == 0) {
+			alert("아이디 중복 검사 해주세요");
+			idValid.prev().focus();
+			return false;
+		}
+
+		//password
+		var $p1 = $("#password_");
+		var $p2 = $("#password2");
+		if (/^[a-zA-Z0-9!@#$$%^&*()]{4,}/.test($p1.val()) == false) {
+			alert("유효한 패스워드를 입력하세요.");
+			$p1.select();
+			return false;
+		}
+
+		if ($p1.val() != $p2.val()) {
+			alert("패스워드가 일치하지 않습니다.");
+			$p1.select();
+			return false;
+		}
+
+		//memberName
+		var $memberName = $("#memberName");
+		if (/^[가-힣]{2,}$/.test($memberName.val()) == false) {
+			alert("이름은 한글 2글자 이상이어야 합니다.");
+			$memberName.select();
+			return false;
+		}
+
+		//phone
+		var $phone = $("#phone");
+		//-제거하기
+		$phone.val($phone.val().replace(/[^0-9]/g, ""));//숫자아닌 문자(복수개)제거하기
+
+		if (/^010[0-9]{8}$/.test($phone.val()) == false) {
+			alert("유효한 전화번호가 아닙니다.");
+			$phone.select();
+			return false;
+		}
+
+		return true;
+
+	});
+</script>
+
 <%@ include file="/WEB-INF/views/common/footer.jsp"%>

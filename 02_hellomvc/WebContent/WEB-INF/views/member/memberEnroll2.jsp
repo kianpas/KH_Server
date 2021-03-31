@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 <section id=enroll-container>
 	<h2>회원 가입 정보 입력</h2>
@@ -83,10 +82,49 @@
  * 회원가입 유효성 검사
  */
 $(document.memberEnrollFrm).submit(function(){
+	//memberId
+	var $memberId = $("#memberId_");
+	//아이디는 영문자/숫자  4글자이상만 허용 
+	if(/^[a-zA-Z0-9]{4,}$/.test($memberId.val()) == false){
+		alert("아이디는 최소 4자리이상이어야 합니다.");
+		$memberId.select();
+		return false;
+	}
+	//password
+	var $p1 = $("#password_");
+	var $p2 = $("#password2");
+	if(/^[a-zA-Z0-9!@#$$%^&*()]{4,}/.test($p1.val()) == false){
+		alert("유효한 패스워드를 입력하세요.");
+		$p1.select();
+		return false;
+	}
 	
+	if($p1.val() != $p2.val()){
+		alert("패스워드가 일치하지 않습니다.");
+		$p1.select();
+		return false;
+	}
 	
+	//memberName
+	var $memberName = $("#memberName");
+	if(/^[가-힣]{2,}$/.test($memberName.val()) == false){
+		alert("이름은 한글 2글자 이상이어야 합니다.");
+		$memberName.select();
+		return false;
+	}
 	
+	//phone
+	var $phone = $("#phone");
+	//-제거하기
+	$phone.val($phone.val().replace(/[^0-9]/g, ""));//숫자아닌 문자(복수개)제거하기
 	
+	if(/^010[0-9]{8}$/.test($phone.val()) == false){
+		alert("유효한 전화번호가 아닙니다.");
+		$phone.select();
+		return false;
+	}
+	
+	return true;
 	
 });
 
