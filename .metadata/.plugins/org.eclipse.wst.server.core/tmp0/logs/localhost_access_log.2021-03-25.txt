@@ -1,2 +1,0 @@
-127.0.0.1 - - [25/Mar/2021:19:42:00 +0900] "GET / HTTP/1.1" 404 751
-0:0:0:0:0:0:0:1 - - [25/Mar/2021:19:42:01 +0900] "GET /mvc/WEB-INF/classes/member/model/dao/MemberDao.java HTTP/1.1" 404 721
