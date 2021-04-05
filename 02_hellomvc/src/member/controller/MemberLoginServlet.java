@@ -34,7 +34,7 @@ public class MemberLoginServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//1. encoding처리
+		//1. encoding처리, 필터로 사전에 처리
 		//request.setCharacterEncoding("utf-8");
 		
 		//2. 사용자입력값 처리
@@ -54,8 +54,10 @@ public class MemberLoginServlet extends HttpServlet {
 		//아이디가 존재하지 않을 때 member == null
 		//비번이 틀릴 때 member != null && !password.equals(member.getPassword())
 		
-		//else에도 사용하기 위해
+		//else에도 사용하기 위해 조건문 위에서 선언
+		//true는 새로운 세션을 생성을 의미
 		HttpSession session = request.getSession(true);
+		
 		if(member != null && password.equals(member.getPassword())) {
 			//로그인 성공
 			//request.setAttribute("msg", "로그인에 성공했습니다");

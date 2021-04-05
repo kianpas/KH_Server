@@ -2,6 +2,7 @@ package member.model.service;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 
 import member.model.dao.MemberDao;
 import member.model.vo.Member;
@@ -68,4 +69,74 @@ public class MemberService {
 		}
 		return result;
 	}
+
+	public List<Member> selectList() {
+		Connection conn = getConnection();
+		List<Member> list = memberDao.selectList(conn);
+			
+		close(conn);
+		
+		return list;
+	}
+	
+	public List<Member> selectList(int start, int end) {
+		Connection conn = getConnection();
+		List<Member> list = memberDao.selectList(conn, start, end);
+			
+		close(conn);
+		return list;
+	}
+	
+
+	public int updateMemberRole(Member member) {
+		Connection conn = getConnection();
+		int result = memberDao.updateMemberRole(conn, member);
+		
+		if(result > 0) {
+			close(conn);
+		} else {
+			rollback(conn);
+		}
+		
+		return result;
+	}
+
+	public List<Member> searchMember(Map<String, String> param) {
+	
+		Connection conn = getConnection();
+		
+		List<Member> list = memberDao.searchMember(conn, param);
+		
+		close(conn);
+		return list;
+	}
+
+	public int selectMemberCount() {
+		Connection conn = getConnection();
+		int totalContents = memberDao.selectMemberCount(conn);
+		return totalContents;
+	}
+
+	
+	
+	
+	public List<Member> searchMember(Map<String, String> param, int start, int end) {
+		Connection conn = getConnection();
+		
+		List<Member> list = memberDao.searchMember(conn, param, start, end);
+		
+		close(conn);
+		return list;
+	}
+
+	public int selectPagedMemberCount(Map<String, String> param) {
+		Connection conn = getConnection();
+		
+		int totalContents = memberDao.selectPagedMemberCount(conn, param);
+		
+		close(conn);
+		return totalContents;
+	}
+
+	
 }

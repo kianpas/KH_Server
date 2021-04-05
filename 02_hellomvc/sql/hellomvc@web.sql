@@ -52,5 +52,58 @@ commit;
 
 select * from member;
 
+select * from member order by enroll_date desc;
+
+
 update member set password = '1ARVn2Auq2/WAqx2gNrL+q3RNjAzXpUfCXrzkA6d4Xa22yhRLy4AC50E+6UTPoscbo31nbOoq51gvkuXzJ6B2w==';
 commit;
+
+--페이징
+--1. rownum 행추가시 자동으로 부여되는 no 10번째 이상은 
+--3단으로 만들어야 가능
+
+select rownum newm, M.*
+from (
+select rownum old , M.*
+from member M
+order by enroll_date desc) M
+where rownum between 1 and 10;
+
+--더 좋은 것
+select *
+from (
+    select rownum rnum, M.*
+    from (
+        select M.*
+        from member M
+        order by enroll_date desc
+        ) M
+    )M
+where rownum between 1 and 10 and gender = 'M' ;
+
+--2. winddow함수 row_number
+--윈도우 함수의 경우 건너뛴 번호도 가능
+--cPage = 1 : 1~10
+--cPage = 2 : 11~20
+--cPage = 3 : 21~30
+--~
+--cpage = 11 : 101 ~ 106
+select count(*)
+from (
+    select  
+    row_number() over(order by enroll_date desc) rnum,
+    M.*
+    from member M
+    ) M
+where rnum between 1 and 10 and gender = 'M';
+
+
+--select * from (select row_number() over(order by enroll_date desc) rnum, M.* from member M) M where rnum between 1 and 10
+
+select count(*) from member;
+
+
+select * from (select row_number() over(order by enroll_date desc) rnum, M.* from member M where gender = 'M') M where rnum between 1 and 10;
+
+
+select count(*) cnt from (select row_number() over(order by enroll_date desc) rnum, M.* from member M) M where gender='M';

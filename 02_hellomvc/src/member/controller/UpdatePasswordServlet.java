@@ -20,7 +20,7 @@ public class UpdatePasswordServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	MemberService memberService = new MemberService();
 	/**
-	 * 비밀번호 변경페이지 제공
+	 * 비밀번호 변경페이지 제공, 페이지 보여주는 것은 get 처리는 post
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {

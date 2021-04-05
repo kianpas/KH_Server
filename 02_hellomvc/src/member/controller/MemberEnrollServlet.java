@@ -68,21 +68,22 @@ public class MemberEnrollServlet extends HttpServlet {
 
 		Member member = new Member();
 
-		// 아래와 같이 가능
-		// Member member = new Member(memberId, password, memberName,
-		// MemberService.MEMBER_ROLE, gender, birthday, email,
-		// phone, address, hobby, null);
-
+		
 		// 페이지 시작후 null값 전달 방지 및 조건 검사
 		// 조건 검사는 jsp에서 하자
 		if (memberId != null) {
 			member.setMemberId(memberId);
 			member.setPassword(password);
 			member.setMemberName(memberName);
+			
+			//일반 회원가입 처리, 서비스의 스타틱변수 가져오기
+			member.setMemberRole(MemberService.MEMBER_ROLE);
 			member.setGender(gender);
-
+			
+			//sql date로 형변환
 			java.sql.Date birthday = java.sql.Date.valueOf(birthday_);
-			System.out.println(birthday);
+			
+			//System.out.println(birthday);
 			member.setBirthday(birthday);
 
 			member.setEmail(email);
@@ -94,19 +95,31 @@ public class MemberEnrollServlet extends HttpServlet {
 				for (int i = 0; i < hobby_.length; i++) {
 					// ,을 기준으로 하나의 문자열로 만듬, 마지막은 , 생략
 					hobby += hobby_[i] != hobby_[hobby_.length - 1] ? hobby_[i] + "," : hobby_[i];
-					// join으로 처리 가능
+					
+					// ,를 기준으로 join으로 처리 가능
 					// hobby = String.join(",", hobbyArr);
 				}
 			}
-
+			
 			member.setHobby(hobby);
+			
+			// 아래와 같이 가능
+			// Member member = new Member(memberId, password, memberName,
+			// MemberService.MEMBER_ROLE, gender, birthday, email,
+			// phone, address, hobby, null);
+
 
 			int result = memberService.insertMember(member);
 
 			System.out.println(member);
+			
 			if (result > 0) {
 				// 가입성공
 				request.setAttribute("signUpMsg", "회원가입 성공!");
+				
+				//msg의 값을 하나로 합치는 것도 가능
+				//setAttribute를 msg로 지정하면 가능
+				
 				// 가능은 하나 리다이렉트 처리할 것 밑에서
 				// request.setAttribute("loc2", request.getContextPath());
 			} else {

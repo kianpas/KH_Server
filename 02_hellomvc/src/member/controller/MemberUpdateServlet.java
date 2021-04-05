@@ -39,7 +39,9 @@ public class MemberUpdateServlet extends HttpServlet {
 
 		// 기존 로그인 세션
 		Member loginMember = (Member) session.getAttribute("loginMember");
-		String password = request.getParameter("password");
+		
+		//비밀번호변경은 따로
+		//String password = request.getParameter("password");
 		String memberName = request.getParameter("memberName");
 		String gender = request.getParameter("gender");
 		String birthday_ = request.getParameter("birthday");
@@ -51,18 +53,19 @@ public class MemberUpdateServlet extends HttpServlet {
 		// 취미를 배열로 가져오기
 		String[] hobby_ = request.getParameterValues("hobby");
 
-		System.out.println("password@servlet = " + password);
+		
 
 		Member member = new Member();
 		member.setMemberId(loginMember.getMemberId());
-		member.setPassword(password);
+		
+		//member.setPassword(password);
+		
 		member.setMemberName(memberName);
 		member.setGender(gender);
 
 		java.sql.Date birthday = java.sql.Date.valueOf(birthday_);
 
 		member.setBirthday(birthday);
-
 		member.setEmail(email);
 		member.setPhone(phone);
 		member.setAddress(address);

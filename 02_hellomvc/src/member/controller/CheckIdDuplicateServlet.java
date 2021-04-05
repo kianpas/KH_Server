@@ -38,7 +38,7 @@ public class CheckIdDuplicateServlet extends HttpServlet {
 		//2. 업무로직 : 해당 id를 db에서 조회
 		
 		Member member = new MemberService().selectOne(memberId);
-		//null이 나올 경우 
+		//null이 나올 경우 false
 		boolean available = member == null;
 		request.setAttribute("available", available);
 		

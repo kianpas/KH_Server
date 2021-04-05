@@ -34,7 +34,7 @@ public class MemberLogoutServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		
 		//doGet, doPost 상관없는 것이면 이런 식으로 처리됨 dopost가 doget호출
 		doGet(request, response);
 	}
