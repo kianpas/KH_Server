@@ -1,8 +1,0 @@
-package member.model.vo;
-
-/**
- *  VO클래스
- */
-public class Member {
-
-}
