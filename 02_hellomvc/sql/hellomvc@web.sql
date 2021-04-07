@@ -79,7 +79,7 @@ from (
         order by enroll_date desc
         ) M
     )M
-where rownum between 1 and 10 and gender = 'M' ;
+where rownum between 11 and 20;
 
 --2. winddow함수 row_number
 --윈도우 함수의 경우 건너뛴 번호도 가능
@@ -102,8 +102,9 @@ where rnum between 1 and 10 and gender = 'M';
 
 select count(*) from member;
 
+select * from (select rownum rnum, M.*from (select M.* from member M order by enroll_date desc ) M )M where rownum between 11 and 20;
 
-select * from (select row_number() over(order by enroll_date desc) rnum, M.* from member M where gender = 'M') M where rnum between 1 and 10;
+select * from (select row_number() over(order by enroll_date desc) rnum, M.* from member M) M where rnum between 5 and 15;
 
 
 select count(*) cnt from (select row_number() over(order by enroll_date desc) rnum, M.* from member M) M where gender='M';

@@ -120,6 +120,7 @@ String kw = request.getParameter("searchKeyword");
 	<input type="hidden" name="memberId" /> <input type="hidden"
 		name="memberRole" />
 </form>
+
 <script>
 
 
@@ -143,6 +144,8 @@ $("#searchType").change(function(){
 		$frm.submit();
 	}
 	});
+	
+	
 	
 	
 </script>

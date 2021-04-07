@@ -18,7 +18,7 @@ import member.model.vo.Member;
  * Servlet Filter implementation class LoginFilter urlPatterns =, 생략 가능
  */
 @WebFilter(urlPatterns = { "/member/memberView", "/member/memberUpdate", "/member/memberDelete",
-		"/member/updatePassword" })
+		"/member/updatePassword", "/board/boardForm" })
 public class LoginFilter implements Filter {
 
 	/**

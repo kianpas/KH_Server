@@ -31,7 +31,7 @@ if (hobby != null) {
 				<td><input type="text" name="memberId" id="memberId_"
 					value="<%=memberId%>" readonly></td>
 			</tr>
-			<!-- 
+			<!-- 패스워드 변경처리는 다른 페이지에서 사용
 			<tr>
 				<th>패스워드</th>
 				<td><input type="password" name="password" id="password_"

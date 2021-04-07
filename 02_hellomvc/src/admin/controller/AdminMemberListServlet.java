@@ -14,17 +14,12 @@ import member.model.service.MemberService;
 import member.model.vo.Member;
 
 /**
- * Paging Recipe
- * A. Contents Section : 쿼리
- * 		1. start rownum ~ end rownum
- * 		2. cpage 현재페이지, numPerPage 페이지당 표시할 컨텐츠 수 
+ * Paging Recipe A. Contents Section : 쿼리 1. start rownum ~ end rownum 2. cpage
+ * 현재페이지, numPerPage 페이지당 표시할 컨텐츠 수
  * 
- * B. Pagebar Section : html 작성
- * 		1. totalContents 총 컨텐츠 수
- * 		2. totalPage 전체 페이지 수
- * 		3. pageBarSize 페이지바에 표시할 페이지 개수
- * 		4. pageNo 페이지 넘버를 출력할 증감변수
- * 		5. pageStart ~ pageEnd pageNo의 범위
+ * B. Pagebar Section : html 작성 1. totalContents 총 컨텐츠 수 2. totalPage 전체 페이지 수
+ * 3. pageBarSize 페이지바에 표시할 페이지 개수 4. pageNo 페이지 넘버를 출력할 증감변수 5. pageStart ~
+ * pageEnd pageNo의 범위
  * 
  */
 @WebServlet("/admin/memberList")
@@ -40,41 +35,38 @@ public class AdminMemberListServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// 1. 사용자 입력값 : 현재페이지 cPage, numberFormat예외 발생 가능성
 		int numPerPage = 10;
-		
+
 		int cPage = 1;
 		try {
 			cPage = Integer.parseInt(request.getParameter("cPage"));
-			
-		} catch(NumberFormatException e){
-		//처리코드 없음, 기본값 1 유지
+
+		} catch (NumberFormatException e) {
+			// 처리코드 없음, 기본값 1 유지
 		}
-		
+
 		// 2. 업무로직 : db에서 전체회원조회, 가입일 내림차순으로 조회
-		//cPage 1 : 1 ~ 10
-		//cPage 2 : 11 ~ 20
-		//cPage 3 : 21 ~ 30
-		
-		int end = cPage * numPerPage; 
-		//int start = end - (numPerPage -1);
-		int start = (cPage -1) * numPerPage + 1;
+		// cPage 1 : 1 ~ 10
+		// cPage 2 : 11 ~ 20
+		// cPage 3 : 21 ~ 30
+
+		int end = cPage * numPerPage;
+		// int start = end - (numPerPage -1);
+		int start = (cPage - 1) * numPerPage + 1;
 		List<Member> list = memberService.selectList(start, end);
 
-		//확인용 출력
+		// 확인용 출력
 //		for (Member m : list) {
 //			System.out.println("list@servlet = " + m);
 //
 //		}
-		
+
 		int totalContents = memberService.selectMemberCount();
 		System.out.println("selectMemberCount " + totalContents);
 		// 3. pagebar 영역 작업
-		
-		String url = request.getRequestURI(); // /mvc/admin/memverList
-		String pageBar = MvcUtils.getPageBar(
-				cPage, numPerPage, totalContents, url
-				);
 
-		
+		String url = request.getRequestURI(); // /mvc/admin/memverList
+		String pageBar = MvcUtils.getPageBar(cPage, numPerPage, totalContents, url);
+
 		// 4. jsp에 html응답메세지 작성 위임
 		request.setAttribute("pageBar", pageBar);
 		request.setAttribute("list", list);

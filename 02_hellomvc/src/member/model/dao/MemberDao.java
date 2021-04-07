@@ -13,9 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.swing.text.html.HTMLDocument.HTMLReader.PreAction;
-
-import common.JDBCTemplate;
 
 import static common.JDBCTemplate.*;
 import member.model.vo.Member;
@@ -342,8 +339,7 @@ public class MemberDao {
 
 			pstmt.setInt(1, start);
 			pstmt.setInt(2, end);
-			
-			
+
 			rset = pstmt.executeQuery();
 			list = new ArrayList<Member>();
 			while (rset.next()) {
@@ -383,19 +379,17 @@ public class MemberDao {
 
 		ResultSet rset = null;
 		int totalContents = 0;
-		
 
 		try {
 
 			pstmt = conn.prepareStatement(sql);
 
 			rset = pstmt.executeQuery();
-			
-			if(rset.next()) {
-				//cnt는 별칭
+
+			if (rset.next()) {
+				// cnt는 별칭
 				totalContents = rset.getInt("cnt");
 			}
-			
 
 		} catch (SQLException e) {
 
@@ -405,19 +399,19 @@ public class MemberDao {
 
 			close(pstmt);
 		}
-		
+
 		return totalContents;
 	}
 
 	public List<Member> searchMember(Connection conn, Map<String, String> param, int start, int end) {
-		
+
 		PreparedStatement pstmt = null;
 		String sql = prop.getProperty("searchPagedMember");
 		// select * from member where member_id like %a%
 		// select * from member where member_name like %a%
 		// select * from member where gender = "M"
 		// 스위치문에는 객체는 불가능
-		
+
 		switch (param.get("searchType")) {
 		case "memberId":
 			sql += " where member_id like '%" + param.get("searchKeyword") + "%') M where rnum between ? and ?";
@@ -429,8 +423,7 @@ public class MemberDao {
 			sql += " where gender = '" + param.get("searchKeyword") + "') M where rnum between ? and ?";
 			break;
 		}
-		//System.out.println("query@dao = " + sql);
-		
+
 		ResultSet rset = null;
 
 		List<Member> list = null;
@@ -440,14 +433,13 @@ public class MemberDao {
 
 			pstmt = conn.prepareStatement(sql);
 
-			
 			pstmt.setInt(1, start);
 			pstmt.setInt(2, end);
-			
+
 			rset = pstmt.executeQuery();
-			
-			//System.out.println(sql);
-			
+
+			// System.out.println(sql);
+
 			list = new ArrayList<Member>();
 			while (rset.next()) {
 				String memberId = rset.getString("member_id");
@@ -481,7 +473,7 @@ public class MemberDao {
 	}
 
 	public int selectPagedMemberCount(Connection conn, Map<String, String> param) {
-		
+
 		PreparedStatement pstmt = null;
 		String sql = prop.getProperty("selectPagedMemberCount");
 
@@ -496,23 +488,20 @@ public class MemberDao {
 			sql += " gender = '" + param.get("searchKeyword") + "'";
 			break;
 		}
-		
-		
+
 		ResultSet rset = null;
 		int totalContents = 0;
-		
 
 		try {
 
 			pstmt = conn.prepareStatement(sql);
 
 			rset = pstmt.executeQuery();
-			
-			if(rset.next()) {
-				//cnt는 별칭
+
+			if (rset.next()) {
+				// cnt는 별칭
 				totalContents = rset.getInt("cnt");
 			}
-			
 
 		} catch (SQLException e) {
 
@@ -522,7 +511,24 @@ public class MemberDao {
 
 			close(pstmt);
 		}
-		
+
 		return totalContents;
+	}
+
+	// 중복제거를 위한 메소드 생성
+	public String setQuery(String query, String searchType, String searchKeyword) {
+		switch (searchType) {
+		case "memberId":
+			query = query.replace("#", " member_id like '%" + searchKeyword + "%'");
+			break;
+		case "memberName":
+			query = query.replace("#", " member_name like '%" + searchKeyword + "%'");
+			break;
+		case "gender":
+			query = query.replace("#", " gender = '" + searchKeyword + "'");
+			break;
+
+		}
+		return query;
 	}
 }
